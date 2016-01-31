@@ -1,32 +1,28 @@
 # An Interactive Tool for Interpretation of PrOCTOR Predictions
-PrOCTOR = Predicting Odds of Clinical Trial Outcomes using a Random Forest Classifier
+###### PrOCTOR = Predicting Odds of Clinical Trial Outcomes using a Random Forest Classifier
 
-Correspondence to:  Katie Gayvert, kmg257 [at] cornell [dot] edu
-
-Last Updated: 1/30/2016 at 10:16 PM
+- Last Updated: 1/30/2016
+- Correspondence to:  Katie Gayvert, kmg257 [at] cornell [dot] edu
 
 ################
 # Requirements #
 ################
-R - tested on version  3.2.2 (2015-08-14) -- "Fire Safety"
-
-R dependecies: shiny, shinyjs, data.table, plyr, htmlwidgets, ggplot2, randomForest, grid, gridExtra, Cairo
+- R - tested on version  3.2.2 (2015-08-14) -- "Fire Safety"
+- R dependecies: shiny, shinyjs, data.table, plyr, htmlwidgets, ggplot2, randomForest, grid, gridExtra, Cairo
 
 To Install:
-
+```
 install.packages(c("shiny", "shinyjs", "data.table", "plyr", "htmlwidgets", "ggplot2", "randomForest", "grid", "gridExtra", "Cairo"))
-
+```
 ########################
 # To Run (in R Studio) #
 ########################
+```
 library(shiny)
-
 library(shinyjs)
-
 load("/path/to/initial_values.RData")
-
 runApp("/path/to/PrOCTOR")
-
+```
 
 ###########
 # Visuals #
@@ -42,11 +38,8 @@ Target Feature Values - Current target-based feature values
 ###########
 # Options #
 ###########
-(1) Pre-load features existing drug
-
-(2) Change individual features using manually entered values *
-
-(3) Change individual features by clicking new value on barplot *
-
-* Change other correlated feature values along with selected feature (set to default)
+1. Pre-load features existing drug
+2. Change individual features using manually entered values *
+3. Change individual features by clicking new value on barplot *
+- * Change other correlated feature values along with selected feature (set to default)
 
