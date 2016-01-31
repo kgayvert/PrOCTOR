@@ -1,14 +1,17 @@
-An Interactive Tool for Interpretation of PrOCTOR Predictions
-PrOCTOR = Predicting Odds of Clinical Trial Outcomes using a Random Forest Classifier
+# An Interactive Tool for Interpretation of PrOCTOR Predictions
+# PrOCTOR = Predicting Odds of Clinical Trial Outcomes using a Random Forest Classifier
 
 Correspondence to:  Katie Gayvert, kmg257 [at] cornell [dot] edu
+
 Last Updated: 1/30/2016 at 10:16 PM
 
 ################
 # Requirements #
 ################
 R - tested on version  3.2.2 (2015-08-14) -- "Fire Safety"
+
 R dependecies: shiny, shinyjs, data.table, plyr, htmlwidgets, ggplot2, randomForest, grid, gridExtra, Cairo
+
 To Install: install.packages(c("shiny", "shinyjs", "data.table", "plyr", "htmlwidgets", "ggplot2", "randomForest", "grid", "gridExtra", "Cairo"))
 
 ########################
