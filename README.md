@@ -41,3 +41,11 @@ runApp("/path/to/PrOCTOR/model_interpretation")
 
 \* Change other correlated feature values along with selected feature (set to default)
 
+#################
+### In-Progress #
+#################
+- [x] Create GitHub repository
+- [x] Make functional interface where all changes update
+- [ ] Finish commenting code
+- [ ] Finish model fine-tuning
+- [ ] Allow user inputted structures and targets

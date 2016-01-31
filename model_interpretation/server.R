@@ -224,7 +224,6 @@ shinyServer(function(input, output) {
     plot_vars=setdiff(feature_df$Feature,c("nTargets"))
     try({feature_df=df_data$features});
     ggplot(feature_df[feature_df$Feature %in% plot_vars,],aes(x=factor(Feature),y=Feature_Quantile,fill=Feature_Type))+geom_bar(stat = "identity")+scale_fill_manual(values=c("darkblue","forestgreen","darkorange1","red"))+theme_bw()+ theme(axis.text.x = element_text(size=12,angle = 60, vjust = 1, hjust=1),legend.position = "none")+xlab("")+ylab("Quantile Value")
-      #    barplot(Feature_Quantile,col = feature.colors,ylab="Quantile Value")
   })
 
   output$predPlot <- renderPlot({

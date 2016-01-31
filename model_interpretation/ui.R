@@ -1,5 +1,3 @@
-#  source("~/Dropbox/ElementoLab/ClinTox/feature_interpretation/feature_interaction/helper_data.R")
-
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
   #  useShinyjs(),
@@ -27,14 +25,7 @@ shinyUI(fluidPage(
       selectInput("drug",label = "Or select a known drug to use",choices = c("Median Values",sort(rownames(sample_drugs))),selected = "Median Values"),
       actionButton("preselectButton", "Choose Selection!"),
       br(),
-#      sliderInput("Or select quantile value on range.", label = "Feature Quantile Value:",min = 0, max = 100, value = 50),
       p("Click the button to update the value displayed in the main panel.")
-#      br(),br(),
-#      p("Click to reset to median values."),
-#      actionButton("reset", "reset")
-      
-      #      uiOutput('featuresTextbox'),
-      #     uiOutput('newVal')
     ),
     
     
