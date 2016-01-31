@@ -10,7 +10,7 @@
 - R - tested on version  **3.2.2** (2015-08-14) -- **"Fire Safety"**
 - R dependecies: shiny, shinyjs, data.table, plyr, htmlwidgets, ggplot2, randomForest, grid, gridExtra, Cairo
 
-To Install:
+To Install R Dependencies:
 ```
 install.packages(c("shiny", "shinyjs", "data.table", "plyr", "htmlwidgets", "ggplot2", "randomForest", "grid", "gridExtra", "Cairo"))
 ```
@@ -38,5 +38,6 @@ runApp("/path/to/PrOCTOR")
 - Pre-load features existing drug
 - Change individual features using manually entered values *
 - Change individual features by clicking new value on barplot *
-* Change other correlated feature values along with selected feature (set to default)
+
+\* Change other correlated feature values along with selected feature (set to default)
 
