@@ -1,5 +1,5 @@
 # An Interactive Tool for Interpretation of PrOCTOR Predictions
-##### PrOCTOR = Predicting Odds of Clinical Trial Outcomes using a Random Forest Classifier
+#### PrOCTOR = Predicting Odds of Clinical Trial Outcomes using a Random Forest Classifier
 
 - Last Updated: 1/30/2016
 - Correspondence to:  Katie Gayvert, kmg257 [at] cornell [dot] edu
