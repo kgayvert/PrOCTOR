@@ -20,8 +20,8 @@ install.packages(c("shiny", "shinyjs", "data.table", "plyr", "htmlwidgets", "ggp
 ```
 library(shiny)
 library(shinyjs)
-load("/path/to/initial_values.RData")
-runApp("/path/to/PrOCTOR")
+load("/path/to/PrOCTOR/model_interpretation/initial_values.RData")
+runApp("/path/to/PrOCTOR/model_interpretation")
 ```
 
 #############
