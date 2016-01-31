@@ -2,7 +2,7 @@
 shinyUI(fluidPage(
   #  useShinyjs(),
   # Application title
-  titlePanel("Modify Features!"),
+  titlePanel("Interactive PrOCTOR Model Feature Testing Tool"),
   
   # Sidebar with a slider input for the number of bins
   sidebarLayout(

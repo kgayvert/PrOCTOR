@@ -164,12 +164,12 @@ shinyServer(function(input, output) {
   }
   
   updateTargetFeature <- function(){
-    try({feature_df=df_data$features});
+    feature_df=df_data$features
     feature_target=feature_df[!(feature_df$Feature_Type %in% c("Chemical Features","Drug-Likeness Rules")),]
   }
   
   updateStructureFeature <- function(){
-    try({feature_df=df_data$features});
+    feature_df=df_data$features
     feature_structure=feature_df[feature_df$Feature_Type %in% c("Chemical Features","Drug-Likeness Rules"),]
     if(feature_df$Feature_Value[feature_df$Feature=="Ro5"]==1){feature_structure$Feature_Value[feature_structure$Feature=="Ro5"]="Fail"}else{feature_structure$Feature_Value[feature_structure$Feature=="Ro5"]="Pass"}
     if(feature_df$Feature_Value[feature_df$Feature=="Veber"]==1){feature_structure$Feature_Value[feature_structure$Feature=="Veber"]="Fail"}else{feature_structure$Feature_Value[feature_structure$Feature=="Veber"]="Pass"}
@@ -180,7 +180,8 @@ shinyServer(function(input, output) {
   }
 
   updatePred <- function(){
-    try({feature_df=df_data$features});
+    feature_df=df_data$features
+    prediction_df=df_data$predictions
     this_pred=median(sapply(rf.list,function(this_model) predict(this_model,get_PC_value(feature_df),"prob")[1]  ))
     this_pred_target=median(sapply(target.rf.list,function(this_model) predict(this_model,get_target_value(feature_df),"prob")[1]  ))
     this_pred_structure=median(sapply(structure.rf.list,function(this_model) predict(this_model,get_structure_value(feature_df),"prob")[1]  ))
@@ -221,18 +222,20 @@ shinyServer(function(input, output) {
   ################
 
   output$featurePlot <- renderPlot({
+    feature_df=df_data$features
     plot_vars=setdiff(feature_df$Feature,c("nTargets"))
-    try({feature_df=df_data$features});
     ggplot(feature_df[feature_df$Feature %in% plot_vars,],aes(x=factor(Feature),y=Feature_Quantile,fill=Feature_Type))+geom_bar(stat = "identity")+scale_fill_manual(values=c("darkblue","forestgreen","darkorange1","red"))+theme_bw()+ theme(axis.text.x = element_text(size=12,angle = 60, vjust = 1, hjust=1),legend.position = "none")+xlab("")+ylab("Quantile Value")
   })
 
   output$predPlot <- renderPlot({
-    try({prediction_df=df_data$predictions});try({feature_df=df_data$features});
+    prediction_df=df_data$predictions
+    feature_df=df_data$features
     ggplot(output_scores_df2,aes(x=(score),fill=class))+geom_density(alpha=0.5,colour="black")+scale_fill_manual(values=c("forestgreen","red"))+xlab("PrOCTOR Score (log2 Odds of Toxicity)")+theme_bw()+theme(legend.position = "none")+ geom_segment(aes(x = prediction_df$Log2_Odds[prediction_df$Model=="Overall"], y = 0.3, xend = prediction_df$Log2_Odds[prediction_df$Model=="Overall"], yend = 0), arrow = arrow(length = unit(0.5, "cm")))+ggtitle(paste0("Overall Predicted ",prediction_df$Prediction[prediction_df$Model=="Overall"],"\nlog2 odds = ",round(abs(prediction_df$Log2_Odds[prediction_df$Model=="Overall"]),5)))    
   })
 
   output$predictionPanel<- renderPlot({
-    try({prediction_df=df_data$predictions});try({feature_df=df_data$features});
+    prediction_df=df_data$predictions
+    feature_df=df_data$features
     p1=ggplot(output_scores_df2,aes(x=(score),fill=class))+geom_density(alpha=0.5,colour="black")+scale_fill_manual(values=c("forestgreen","red"))+xlab("PrOCTOR Score (log2 Odds of Toxicity)")+theme_bw()+theme(legend.position = "none")+ geom_segment(aes(x = prediction_df$Log2_Odds[prediction_df$Model=="Overall"], y = 0.3, xend = prediction_df$Log2_Odds[prediction_df$Model=="Overall"], yend = 0), arrow = arrow(length = unit(0.5, "cm")))+ggtitle(paste0("Overall Predicted ",prediction_df$Prediction[prediction_df$Model=="Overall"],"\nlog2 odds = ",round(abs(prediction_df$Log2_Odds[prediction_df$Model=="Overall"]),5)))    
     p2=ggplot(output_scores_df2,aes(x=(score),fill=class))+geom_density(alpha=0.5,colour="black")+scale_fill_manual(values=c("forestgreen","red"))+xlab("PrOCTOR Score (log2 Odds of Toxicity)")+theme_bw()+theme(legend.position = c(0.8,0.875))+ geom_segment(aes(x = prediction_df$Log2_Odds[prediction_df$Model=="Target"], y = 0.3, xend = prediction_df$Log2_Odds[prediction_df$Model=="Target"], yend = 0), arrow = arrow(length = unit(0.5, "cm")))+ggtitle(paste0("Target Predicted ",prediction_df$Prediction[prediction_df$Model=="Target"],"\nlog2 odds = ",round(abs(prediction_df$Log2_Odds[prediction_df$Model=="Target"]),5)))
     p3=ggplot(output_scores_df2,aes(x=(score),fill=class))+geom_density(alpha=0.5,colour="black")+scale_fill_manual(values=c("forestgreen","red"))+xlab("PrOCTOR Score (log2 Odds of Toxicity)")+theme_bw()+theme(legend.position ="none")+ geom_segment(aes(x = prediction_df$Log2_Odds[prediction_df$Model=="Structure"], y = 0.3, xend = prediction_df$Log2_Odds[prediction_df$Model=="Structure"], yend = 0), arrow = arrow(length = unit(0.5, "cm")))+ggtitle(paste0("Structure Predicted ",prediction_df$Prediction[prediction_df$Model=="Structure"],"\nlog2 odds = ",round(abs(prediction_df$Log2_Odds[prediction_df$Model=="Structure"]),5)))    
@@ -267,29 +270,29 @@ shinyServer(function(input, output) {
   # Output Predictions Values
   # Type = Table
   output$predictionValues <- renderTable({
-    try({prediction_df=df_data$predictions});
+    prediction_df=df_data$predictions
     prediction_df
   })
 
   # Output Predictions Values
   # Type = Text
   output$predictionInfo <- renderText({
-    try({prediction_df=df_data$predictions});
+    prediction_df=df_data$predictions
     paste(sapply(1:3,function(i) paste0(prediction_df$Model[i]," Model\n   Predicted ",prediction_df$Prediction[i],"\n   log2 odds = ",round(prediction_df$Log2_Odds[i],4))),collapse="\n\n")
   })
 
   output$overallPredictionInfo <- renderText({
-    try({prediction_df=df_data$predictions});
+    prediction_df=df_data$predictions
     paste("Predicted",prediction_df$Prediction[1],"\nProbability of Toxicity = ",round(prediction_df$Prob[1],4),"\nPrOCTOR Score = ",round(prediction_df$Log2_Odds[1],4))
   })
 
   output$structuralPredictionInfo <- renderText({
-    try({prediction_df=df_data$predictions});
+    prediction_df=df_data$predictions
     paste("Predicted",prediction_df$Prediction[2],"\nProbability of Toxicity = ",round(prediction_df$Prob[2],4),"\nPrOCTOR Score = ",round(prediction_df$Log2_Odds[2],4))
   })
   
   output$targetPredictionInfo <- renderText({
-    try({prediction_df=df_data$predictions});
+    prediction_df=df_data$predictions
     paste("Predicted",prediction_df$Prediction[3],"\nProbability of Toxicity = ",round(prediction_df$Prob[3],4),"\nPrOCTOR Score = ",round(prediction_df$Log2_Odds[3],4))
   })
 
