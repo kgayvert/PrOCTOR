@@ -20,7 +20,7 @@ shinyUI(fluidPage(
                   selected = "Original"),
       textInput(inputId = "newval", label = h5("Enter a new value:"), value = ""),
       actionButton("goButton", "Go!"),
-      checkboxInput("correlates", "Change Using Correlations", TRUE),
+      checkboxInput("correlates", "Change Using Correlations", FALSE),
       br(),
       selectInput("drug",label = "Or select a known drug to use",choices = c("Median Values",sort(rownames(sample_drugs))),selected = "Median Values"),
       actionButton("preselectButton", "Choose Selection!"),
