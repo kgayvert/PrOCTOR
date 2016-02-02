@@ -15,7 +15,7 @@ shinyServer(function(input, output) {
   ######################
   # Reactive DataFrame #
   ######################    
-  df_data=reactiveValues(features=initial_feature_df,predictions=initial_prediction_df,structureFeatures=initial_feature_structure,targetFeatures=initial_feature_target,corFlag=TRUE,currentDrug="Median Values")
+  df_data=reactiveValues(features=initial_feature_df,predictions=initial_prediction_df,structureFeatures=initial_feature_structure,targetFeatures=initial_feature_target,corFlag=FALSE,currentDrug="Median Values")
   
   ######################
   # Reactive Functions #
