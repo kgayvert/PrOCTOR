@@ -19,7 +19,6 @@ install.packages(c("shiny", "shinyjs", "data.table", "plyr", "htmlwidgets", "ggp
 ##########################
 ```
 library(shiny)
-library(shinyjs)
 load("/path/to/PrOCTOR/model_interpretation/initial_values.RData")
 runApp("/path/to/PrOCTOR/model_interpretation")
 ```
@@ -39,7 +38,7 @@ runApp("/path/to/PrOCTOR/model_interpretation")
 - Change individual features using manually entered values *
 - Change individual features by clicking new value on barplot *
 
-\* Change other correlated feature values along with selected feature (set to default)
+\* Change other correlated feature values along with selected feature (default set off)
 
 #######################
 ### Tasks In-Progress #
