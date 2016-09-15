@@ -1,26 +1,54 @@
 # An Interactive Tool for Interpretation and Testing of PrOCTOR Features and Predictions
 #### PrOCTOR = Predicting Odds of Clinical Trial Outcomes using a Random Forest Classifier
 
-- Last Updated: 1/30/2016
+- Last Updated: 9/16/2016
 - Correspondence to:  Katie Gayvert, kmg257 [at] cornell [dot] edu
 
 ##################
 ### Requirements #
 ##################
 - R - tested on version  **3.2.2** (2015-08-14) -- **"Fire Safety"**
-- R dependecies: shiny, shinyjs, data.table, plyr, htmlwidgets, ggplot2, randomForest, grid, gridExtra, Cairo
+- R dependecies (Feature Interpretation Tool): shiny, shinyjs, data.table, plyr, htmlwidgets, ggplot2, randomForest, grid, gridExtra, Cairo
+- Additional R dependecies (Prediction Tool): ChemmineR, ChemmineOB, rcdk, Rcpi
+
 
 To Install R Dependencies:
 ```
-install.packages(c("shiny", "shinyjs", "data.table", "plyr", "htmlwidgets", "ggplot2", "randomForest", "grid", "gridExtra", "Cairo"))
+install.packages(c("shiny", "shinyjs", "data.table", "plyr", "htmlwidgets", "ggplot2", "randomForest", "grid", "gridExtra", "Cairo","rcdk"))
+source("https://bioconductor.org/biocLite.R")
+biocLite("Rcpi")
+biocLite("ChemmineR")
+biocLite("ChemmineOB")
+
 ```
+
+### PrOCTOR_prediction
+##########################
+### To Run (in R) #
+##########################
+```
+source("/path/to/PrOCTOR/R/PrOCTOR.R")
+PrOCTOR(SMILE,target_list)
+```
+
 ##########################
 ### To Run (in R Studio) #
 ##########################
 ```
 library(shiny)
-load("/path/to/PrOCTOR/model_interpretation/initial_values.RData")
-runApp("/path/to/PrOCTOR/model_interpretation")
+load("/path/to/PrOCTOR/shiny/PrOCTOR_prediction/initial_values.RData")
+runApp("/path/to/PrOCTOR/shiny/PrOCTOR_prediction")
+```
+
+
+### PrOCTOR_interpretation
+##########################
+### To Run (in R Studio) #
+##########################
+```
+library(shiny)
+load("/path/to/PrOCTOR/shiny/PrOCTOR_interpretation/initial_values.RData")
+runApp("/path/to/PrOCTOR/shiny/PrOCTOR_interpretation")
 ```
 
 #############
@@ -45,6 +73,6 @@ runApp("/path/to/PrOCTOR/model_interpretation")
 #######################
 - [x] Create GitHub repository
 - [x] Make functional interface where all changes update
+- [x] Allow user inputted structures and targets
 - [ ] Finish commenting code
 - [ ] Finish model fine-tuning
-- [ ] Allow user inputted structures and targets
