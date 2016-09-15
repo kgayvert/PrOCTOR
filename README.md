@@ -22,13 +22,17 @@ biocLite("ChemmineOB")
 
 ```
 
-## PrOCTOR Prediction
+## PrOCTOR - Prediction
 ##########################
 ### To Run (in R) #
 ##########################
 ```
 source("/path/to/PrOCTOR/R/PrOCTOR.R")
 PrOCTOR(SMILE,target_list)
+```
+Example (Dexamethasone):
+```
+PrOCTOR(SMILE="[H][C@@]12C[C@@H](C)[C@](O)(C(=O)CO)[C@@]1(C)C[C@H](O)[C@@]1(F)[C@@]2([H])CCC2=CC(=O)C=C[C@]12C",targets=c("NR3C1","NR0B1","ANXA1","NOS2"))
 ```
 
 ##########################
@@ -41,7 +45,7 @@ runApp("/path/to/PrOCTOR/shiny/PrOCTOR_prediction")
 ```
 
 
-## PrOCTOR Feature Interpretation
+## PrOCTOR - Feature Interpretation
 ##########################
 ### To Run (in R Studio) #
 ##########################
