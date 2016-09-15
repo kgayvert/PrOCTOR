@@ -22,7 +22,7 @@ biocLite("ChemmineOB")
 
 ```
 
-### PrOCTOR_prediction
+## PrOCTOR Prediction
 ##########################
 ### To Run (in R) #
 ##########################
@@ -41,7 +41,7 @@ runApp("/path/to/PrOCTOR/shiny/PrOCTOR_prediction")
 ```
 
 
-### PrOCTOR_interpretation
+## PrOCTOR Feature Interpretation
 ##########################
 ### To Run (in R Studio) #
 ##########################
