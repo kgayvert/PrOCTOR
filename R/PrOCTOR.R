@@ -1,15 +1,22 @@
 ####
 # PrOCTOR.R
-# Last Updated: September 15, 2016
 # Description: Run PrOCTOR for any given structure/target pair
+# Last Updated: October 20, 2016
+# Update: Fixed bug in plotting function. Added predictions for target/structure specific models and a plot all function.
 # Functions:
-#   1) PrOCTOR(SMILE,targets)
+#   1) PrOCTOR(SMILE,targets,type)
 #         - applies PrOCTOR to inputted drug
+#         - type = type of PrOCTOR model to use: full, target, structure (default=full)
 #         - example: Dexamethasone
 #             --> PrOCTOR(SMILE="[H][C@@]12C[C@@H](C)[C@](O)(C(=O)CO)[C@@]1(C)C[C@H](O)[C@@]1(F)[C@@]2([H])CCC2=CC(=O)C=C[C@]12C",targets=c("NR3C1","NR0B1","ANXA1","NOS2"))
 #
-#   2) PrOCTOR_plot(SMILE,targets)
+#   2) PrOCTOR_plot(SMILE,targetstype)
 #         - applies PrOCTOR and displays a graph that compares the inputted drug to the training set
+#
+#   2) PrOCTOR_plotall(SMILE,targets)
+#         - applies PrOCTOR and displays graphs that compares the inputted drug to the training set
+#           for full, target, and structural version of PrOCTOR
+#
 
 library(ChemmineR)
 library(ChemmineOB)
@@ -17,21 +24,49 @@ library(rcdk)
 library(Rcpi)
 library(randomForest)
 library(ggplot2)
+require(gridExtra)
 library(data.table)
 
 ##### Main Functions
 
-PrOCTOR=function(SMILE,targets){
+PrOCTOR=function(SMILE,targets,type="full"){
   featureset=getAllFeatures(SMILE,targets)
+  if(grepl("struct|Struct",type)){
+    prob=1-median(sapply(data$tree$struct,function(this_model) predict(this_model,featureset[names(featureset) %in% rownames(data$tree$struct[[1]]$importance)],"prob")[1]  ))
+    return(list(pred=c("Safe","Toxic")[as.numeric(prob<0.5)+1],prob=prob,score=log2(prob/(1-prob))))
+  }else if(grepl("targ|Targ",type)){
+    prob=1-median(sapply(data$tree$target,function(this_model) predict(this_model,featureset[names(featureset) %in% rownames(data$tree$target[[1]]$importance)],"prob")[1]  ))
+    return(list(pred=c("Safe","Toxic")[as.numeric(prob<0.5)+1],prob=prob,score=log2(prob/(1-prob))))    
+  }
   prob=1-median(sapply(data$tree$full,function(this_model) predict(this_model,featureset[!names(featureset) %in% c("Ro5","Ghose","Veber")],"prob")[1]  ))
   return(list(pred=c("Safe","Toxic")[as.numeric(prob<0.5)+1],prob=prob,score=log2(prob/(1-prob))))
 }
 
 
-PrOCTOR_plot=function(SMILE,targets){
-  res=PrOCTOR(SMILE,targets)
-  #  ggplot(trainingset_scores,aes(x=(probs),fill=class))+geom_density(alpha=0.5)+xlab("")+scale_fill_manual(values=c("red","skyblue"))+xlab("PrOCTOR Score (Probability of Toxicity)")+theme_bw()+theme(legend.position = "none")+ geom_segment(aes(x = res$prob, y = 0.3, xend = res$prob, yend = 0), arrow = arrow(length = unit(0.5, "cm")))+ggtitle(paste0("Predicted ",res$pred,"\nlog2 odds = ",round(abs(res$score),5))) 
-  ggplot(trainingset_scores,aes(x=(score),fill=class))+geom_density(alpha=0.5)+xlab("")+scale_fill_manual(values=c("red","skyblue"),name="Training Set Class")+xlab("PrOCTOR Score (- log2 Odds of Toxicity)")+theme_bw()+ theme(legend.position=c(0.25,0.8),title =element_text(size=12, face='bold'),axis.title = element_text(size=11,face='bold'),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ geom_segment(aes(x = res$score, y = 0.33, xend = res$score, yend = 0), arrow = arrow(length = unit(0.5, "cm")))+ggtitle(paste0("Predicted ",res$pred))+ annotate("text", x = res$score, y = 0.35, label = paste0("PrOCTOR Score = ",round(abs(res$score),5)))+annotate("text",x=-6.75,y=-0.01,label="toxic",col="red")+annotate("text",x=4.25,y=-0.01,label="safe",col="skyblue3")
+PrOCTOR_plot=function(SMILE,targets,type="full"){
+  titlemap=data.table(val=c("struct","Struct","target","Target","full"),map=c("Structural Model","Structural Model","Target Model","Target Model","Full Model"))
+  res=PrOCTOR(SMILE,targets,type)
+  if(grepl("struct|Struct",type)){
+    trainingset_probs=apply(sapply(1:5,function(i) data$tree$struct[[i]]$votes[,2]),1,median)
+  }else if(grepl("targ|Targ",type)){
+    trainingset_probs=apply(sapply(1:5,function(i) data$tree$target[[i]]$votes[,2]),1,median)
+  }else{
+    trainingset_probs=apply(sapply(1:5,function(i) data$tree$full[[i]]$votes[,2]),1,median)
+  }
+  
+  trainingset_scores=data.table(score=log2(trainingset_probs/(1-trainingset_probs)),class=data$tree$full[[1]]$y)
+  g=ggplot(trainingset_scores,aes(x=(score),fill=class))+geom_density(alpha=0.5)+xlab("")+scale_fill_manual(values=c("red","skyblue"),name="Training Set Class")+xlab("PrOCTOR Score (- log2 Odds of Toxicity)")+theme_bw()+ theme(legend.position=c(0.25,0.8),title =element_text(size=12, face='bold'),axis.title = element_text(size=11,face='bold'),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ geom_segment(aes(x = res$score, y = 0.33, xend = res$score, yend = 0), arrow = arrow(length = unit(0.5, "cm")))+ggtitle(paste0(titlemap$map[which(sapply(titlemap$val,function(x) grepl(x,type)))],"\nPredicted ",res$pred))+ annotate("text", x = res$score, y = 0.35, label = paste0("PrOCTOR Score = ",round(abs(res$score),5)))+annotate("text",x=-6.75,y=-0.01,label="toxic",col="red")+annotate("text",x=4.25,y=-0.01,label="safe",col="skyblue3")+ theme(legend.background = element_rect( fill = NA)) 
+  if(grepl("struct|Struct|target|Target",type)){
+   g=g+theme(legend.position = "none") 
+  }
+  return(g)
+}
+
+PrOCTOR_plotall=function(SMILE,targets){
+    g1=PrOCTOR_plot(SMILE,targets,"full")
+    g2=PrOCTOR_plot(SMILE,targets,"target")
+    g3=PrOCTOR_plot(SMILE,targets,"structure")
+    grid.arrange(g1,g2,g3, ncol=3)
 }
 
 ##### Sub-Functions
@@ -123,6 +158,11 @@ getTargetFeatures=function(this.targets){
   return(c(lossFreq=max(data$target_data$lof$deleterious[rownames(data$target_data$lof) %in% this.targets]/data$target_data$lof$Total[rownames(data$target_data$lof) %in% this.targets]),maxBtwn=max(data$target_data$btwn[names(data$target_data$btwn) %in% this.targets]),maxDegree=max(data$target_data$degree[names(data$target_data$degree) %in% this.targets]),get_PC_value(this.targets)))
 }
 
+getRotatableBondCount=function(SMILE,mol){
+  out=tryCatch({RBC=extractDrugRotatableBondsCount(parse.smiles(as.vector(SMILE)))[[1]] },error=function(cond){return(as.numeric(smartsSearchOB(mol,"[!$([NH]!@C(=O))&!D1&!$(*#*)]-&!@[!$([NH]!@C(=O))&!D1&!$(*#*)]")))})
+  return(out)
+}
+
 getAllFeatures=function(SMILE,targets){
   mol=smiles2sdf(as(as.vector(SMILE),"SMIset"))
   props=propOB(mol)
@@ -133,7 +173,7 @@ getAllFeatures=function(SMILE,targets){
   HBA=props$HBA2 #hydrogen bond acceptor count
   PSA=props$TPSA #polar surface area
   FC=sum(bonds(mol, type="bonds")[[1]]$charge) #formal charge
-  RBC=extractDrugRotatableBondsCount(parse.smiles(as.vector(SMILE)))[[1]] #rotatable bonds count
+  RBC=getRotatableBondCount(SMILE,mol) #rotatable bonds count
   refr=props$MR # refractivity
   alogP=NA #
   nA=sum(atomcountMA(mol,addH=FALSE)) #number atoms
