@@ -41,8 +41,8 @@ PrOCTOR(SMILE="[H][C@@]12C[C@@H](C)[C@](O)(C(=O)CO)[C@@]1(C)C[C@H](O)[C@@]1(F)[C
 ##########################
 ```
 library(shiny)
-load("/path/to/PrOCTOR/shiny/PrOCTOR_prediction/initial_values.RData")
-runApp("/path/to/PrOCTOR/shiny/PrOCTOR_prediction")
+load("/path/to/PrOCTOR/shiny/PrOCTOR_predictions/initial_values.RData")
+runApp("/path/to/PrOCTOR/shiny/PrOCTOR_predictions")
 ```
 
 
