@@ -22,6 +22,20 @@ biocLite("ChemmineOB")
 
 ```
 
+If running on R version **3.6.0** (2019-04-26) -- **"Planting of a Tree"** 
+then one must install Bioconductor packages using BiocManager; see https://bioconductor.org/install for details
+
+Instead of the above, please use the following to Install R Dependencies:
+```
+install.packages(c("shiny", "shinyjs", "data.table", "plyr", "htmlwidgets", "ggplot2", "randomForest", "grid", "gridExtra", "Cairo","rcdk"))
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install()
+BiocManager::install("Rcpi")
+BiocManager::install("ChemmineR")
+BiocManager::install("ChemmineOB")
+```
+
 ## PrOCTOR - Prediction
 ##########################
 ### To Run (in R) #
